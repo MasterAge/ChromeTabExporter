@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Export",
+  "description": "An extension to export tab information to the clipboard",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "resources/icon.png"
+  },
+  "permissions": [
+    "tabs"
+  ]
+}
