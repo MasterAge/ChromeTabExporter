@@ -9,3 +9,38 @@
 .heading {
     margin-top: 0px;
 }
+
+.tabListPreview {
+    margin-left: 10px;
+    overflow: auto;
+}
+
+.alert {
+    margin-top: 10px;
+    padding: 5px;
+
+    background: lightgreen;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.exportButton {
+    width: 100%;
+}
+
+.controls {
+    border-radius: 5px;
+    border-color: lightgrey;
+}
+
+.fieldSelect {
+    margin: 0px 5px;
+}
+
+.fieldGroup:nth-child(1) {
+    margin-left: 0px;
+}
+
+.formLabel {
+    margin: 5px 0px;
+}
