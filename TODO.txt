@@ -1,5 +1,7 @@
 TODO:
 Add keyboard shortcut
+Add to chrome store
+Polish readme
 
 Done:
 Use existing tabs in example
