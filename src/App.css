@@ -31,6 +31,12 @@
 .controls {
     border-radius: 5px;
     border-color: lightgrey;
+    border-width: 1px;
+}
+
+.controls:focus-visible {
+    border-color: #adaaaa;
+    outline-color: #adaaaa;
 }
 
 .fieldSelect {

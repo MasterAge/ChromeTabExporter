@@ -44,12 +44,16 @@ class App extends React.Component<{}, AppState> {
         }
 
         chrome.tabs.query({currentWindow: true})
-            .then(tabList => this.setState({tabs: tabList}));
+              .then(tabList => this.setState({tabs: tabList}, this.updateExample));
     }
 
     updateExample = () => {
-        const exampleTabList = [{index: 1, title: "Title", url: "https://url/page"}] as Tab[];
-        this.setState({example: this.makeTabList(exampleTabList)})
+        let outputExample = this.makeTabList(this.state.tabs.slice(0, 1));
+        if (this.state.tabs.length > 1) {
+            const remainingTabs = this.state.tabs.length - 1;
+            outputExample += `\n  + ${remainingTabs} more ${(remainingTabs == 1) ? 'tab' : 'tabs'}`
+        }
+        this.setState({example: outputExample})
     }
 
     makeTabList = (tabs: chrome.tabs.Tab[]): string => {
@@ -74,13 +78,19 @@ class App extends React.Component<{}, AppState> {
     }
 
     setDelim = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({delim: event.target.value}, this.updateExample)
+        this.setState({delim: event.target.value}, () => {
+            this.updateExample();
+            this.saveConfig();
+        });
     }
 
     selectChange(selectIndex: number, event: ChangeEvent<HTMLSelectElement>) {
         const fieldOrder = [...this.state.fieldOrder];
         fieldOrder[selectIndex] = FieldMap.get(event.target.value) || NoneField;
-        this.setState({fieldOrder: fieldOrder}, this.updateExample);
+        this.setState({fieldOrder: fieldOrder}, () => {
+            this.updateExample();
+            this.saveConfig();
+        });
     }
 
     fieldSelected = (): boolean => {

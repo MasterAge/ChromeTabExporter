@@ -2,4 +2,5 @@ TODO:
 Add keyboard shortcut
 
 Done:
+Use existing tabs in example
 Add storage of changes
