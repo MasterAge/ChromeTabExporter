@@ -1,5 +1,5 @@
 # TabExport Chrome Extension
-A Chrome extension that exports a set of tabs into a text list, e.g:
+A Chrome extension that exports open tabs to the clipboard.
 
 Install it from the Chrome Web Store: [TabExport](https://chrome.google.com/webstore/category/extensions)
 

@@ -1,0 +1,17 @@
+Text
+>
+Background
+
+Circle
+Font Family (view all on Google Fonts)
+
+Doppio One
+Font Variant
+
+Regular 400 Normal
+Font Size
+120
+Font Color
+#FFF
+Background Color
+#A00
