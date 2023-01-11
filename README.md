@@ -1,7 +1,7 @@
 # TabExport Chrome Extension
 A Chrome extension that exports open tabs to the clipboard.
 
-Install it from the Chrome Web Store: [TabExport](https://chrome.google.com/webstore/category/extensions)
+Install it from the Chrome Web Store: [TabExport](https://chrome.google.com/webstore/detail/tab-export/pmobcjipmoagglmocflbmccliajolcde)
 
 ## Example
 
