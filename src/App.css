@@ -6,8 +6,27 @@
     width: 50px;
 }
 
-.heading {
-    margin-top: 0px;
+.tabList {
+    display: flex;
+    justify-content: space-between;
+}
+
+h3.selectedTab {
+    border-bottom-width: 0px;
+}
+
+.tabButton {
+    margin-top: 0;
+    cursor: pointer;
+    border-style: solid;
+    border-color: #c1bcbc;
+    border-width: 1px;
+    padding: 0px 6px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: 0px;
+    width: 100%;
+    text-align: center;
 }
 
 .tabListPreview {
@@ -26,12 +45,14 @@
 
 .exportButton {
     width: 100%;
+    border-color: #d3d3d3;
 }
 
 .controls {
     border-radius: 5px;
     border-color: lightgrey;
     border-width: 1px;
+    background-color: white;
 }
 
 .controls:focus-visible {
@@ -49,4 +70,12 @@
 
 .formLabel {
     margin: 5px 0px;
+}
+
+.urlImportInput {
+    width: calc(100% - 10px);
+    resize: none;
+    min-height: 117px;
+    overflow-wrap: normal;
+    text-wrap: nowrap;
 }

@@ -1,8 +1,8 @@
 TODO:
 Add keyboard shortcut
-Polish readme
 
 Done:
 Use existing tabs in example
 Add storage of changes
 Add to chrome store
+Polish readme

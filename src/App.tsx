@@ -22,14 +22,23 @@ const FieldMap: Map<string, TabField> = new Map<string, TabField>([
 
 const FieldOptions: string[] = Array.from(FieldMap.keys());
 
+// This a very simple regex that works for all URLs I've tested.
+// More complex regexes always fell over on typical examples
+const URL_regex = new RegExp("[a-z]+:\\/\\/[^\\s]+", "i")
+
+enum PluginTabs {
+    export,
+    import
+}
+
 interface AppState {
     tabs: Array<chrome.tabs.Tab>;
     delim: string;
     fieldOrder: Array<TabField>;
-
     example: string;
-
     showAlert: boolean;
+    pluginTab: PluginTabs;
+    urlImport: string;
 }
 
 class App extends React.Component<{}, AppState> {
@@ -41,10 +50,12 @@ class App extends React.Component<{}, AppState> {
             fieldOrder: [UrlField, NoneField, NoneField],
             example: "https://url/page",
             showAlert: false,
+            pluginTab: PluginTabs.export,
+            urlImport: ""
         }
 
         chrome.tabs.query({currentWindow: true})
-              .then(tabList => this.setState({tabs: tabList}, this.updateExample));
+            .then(tabList => this.setState({tabs: tabList}, this.updateExample));
     }
 
     updateExample = () => {
@@ -106,7 +117,7 @@ class App extends React.Component<{}, AppState> {
 
     loadConfig = () => {
         chrome.storage.sync.get(["fieldOrder", "delim"]).then(result => {
-            console.log(result);
+            // console.log(result);
             this.setState({
                 delim: result.delim,
                 fieldOrder: Array.of(...result.fieldOrder).map((fieldName: string) => FieldMap.get(fieldName) || NoneField)
@@ -114,33 +125,83 @@ class App extends React.Component<{}, AppState> {
         });
     }
 
+    selectTab = (tab: PluginTabs) => {
+        this.setState({pluginTab: tab});
+    }
+
+    getTabClasses = (tab: PluginTabs) => {
+        let classes = "tabButton";
+
+        if (this.state.pluginTab == tab) {
+            classes += " selectedTab";
+        }
+
+        return classes;
+    }
+
+    setUrls = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        this.setState({urlImport: event.target.value});
+    }
+
+    openTabs = () => {
+        this.state.urlImport.split("\n").forEach((line) => {
+            const url_match = URL_regex.exec(line);
+            if (url_match != null) {
+                chrome.tabs.create({url: url_match[0]}).then(() => {});
+            }
+        })
+    }
+
     render() {
         return (
             <div className="App">
-                <h3 className="heading">Tab Export</h3>
-                <div className="formLabel">Field separator:</div>
-                <div><input onChange={this.setDelim} className="delimInput controls" value={this.state.delim}/></div>
-                <div className="formLabel">Field order:</div>
-                <div className="fieldGroup">
-                    {[0, 1, 2].map(index => (
-                        <select
-                            className="controls fieldSelect"
-                            value={this.state.fieldOrder[index].name}
-                            onChange={this.selectChange.bind(this, index)}
-                        >
-                            {FieldOptions.map(option => <option value={option}>{option}</option>)}
-                        </select>
-                    ))}
+                <div className="tabList">
+                    <h3
+                        className={this.getTabClasses(PluginTabs.export)}
+                        onClick={() => this.selectTab(PluginTabs.export)}
+                    >
+                        Tab Export
+                    </h3>
+                    <h3
+                        className={this.getTabClasses(PluginTabs.import)}
+                        onClick={() => this.selectTab(PluginTabs.import)}
+                    >
+                        Tab Import
+                    </h3>
                 </div>
-                <div className="formLabel">Example:</div>
-                <pre className="tabListPreview">
-                    {this.state.example}
-                </pre>
-                <button onClick={this.exportTabs} className="exportButton controls" disabled={!this.fieldSelected}>
-                    Export tabs to clipboard
-                </button>
-                <div className="alert" hidden={!this.state.showAlert}>
-                    Tabs exported to clipboard
+                <div id="tabExport" hidden={this.state.pluginTab != PluginTabs.export}>
+                    <div className="formLabel">Field separator:</div>
+                    <div><input onChange={this.setDelim} className="delimInput controls" value={this.state.delim}/>
+                    </div>
+                    <div className="formLabel">Field order:</div>
+                    <div className="fieldGroup">
+                        {[0, 1, 2].map(index => (
+                            <select
+                                className="controls fieldSelect"
+                                value={this.state.fieldOrder[index].name}
+                                onChange={this.selectChange.bind(this, index)}
+                            >
+                                {FieldOptions.map(option => <option value={option}>{option}</option>)}
+                            </select>
+                        ))}
+                    </div>
+                    <div className="formLabel">Example:</div>
+                    <pre className="tabListPreview">
+                        {this.state.example}
+                    </pre>
+                    <button onClick={this.exportTabs} className="exportButton controls" disabled={!this.fieldSelected}>
+                        Export tabs to clipboard
+                    </button>
+                    <div className="alert" hidden={!this.state.showAlert}>
+                        Tabs exported to clipboard
+                    </div>
+                </div>
+                <div id="tabImport" hidden={this.state.pluginTab != PluginTabs.import}>
+                    <div className="formLabel">URLs:</div>
+                    <textarea className="controls urlImportInput" cols={28} onChange={this.setUrls}/>
+                    <button onClick={this.openTabs} className="exportButton controls">
+                        Open Tabs
+                    </button>
                 </div>
             </div>
         );
